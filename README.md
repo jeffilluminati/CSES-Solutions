@@ -11,3 +11,10 @@ The solutions rely on the shared `cp` crate and its macros such as
 `cp::prepare!()`, `sc!`, `pp!`, and `cp::main!()`. Because of that, they are
 meant to be read or copied into one of the actual binaries under `src/bin/`
 when you want to run or submit them.
+
+## Bundling the code
+Use the `cr` helper available in the above repository, and it should bundle it to `/tmp/a.rs`. 
+This should allow for submission to the online judge. 
+Usage is as follows: 
+`./cr a` for bundling a.rs, and so on respectively for every scratch file. 
+Further details are in the library documentation.
