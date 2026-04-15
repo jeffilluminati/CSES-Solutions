@@ -1,7 +1,6 @@
 # CSES Solutions
 
-Reference solutions for CSES problems written in Rust with this repository's
-competitive programming template.
+Reference solutions for CSES problems written in Rust.
 
 ## Running the code
 The repository for running my code is [rust-cp-template](https://github.com/jeffilluminati/rust-cp-template).
