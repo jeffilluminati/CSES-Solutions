@@ -1,7 +1,6 @@
 # CSES Solutions
 
-Reference solutions for CSES problems written in Rust with this repository's
-competitive programming template.
+Reference solutions for CSES problems written in Rust.
 
 ## Running the code
 The repository for running my code is [rust-cp-template](https://github.com/jeffilluminati/rust-cp-template).
@@ -15,6 +14,9 @@ when you want to run or submit them.
 ## Bundling the code
 Use the `cr` helper available in the above repository, and it should bundle it to `/tmp/a.rs`. 
 This should allow for submission to the online judge. 
+
 Usage is as follows: 
+
 `./cr a` for bundling a.rs, and so on respectively for every scratch file. 
+
 Further details are in the library documentation.
