@@ -8,8 +8,7 @@ pub fn solve() {
     let odd = freq
         .iter()
         .enumerate()
-        .filter(|&(_, &cnt)| cnt % 2 == 1)
-        .map(|(i, _)| i as u8 + b'A')
+        .filter_map(|(i, &cnt)| (cnt % 2 == 1).then_some(i as u8 + b'A'))
         .collect::<Vec<_>>();
 
     if odd.len() > 1 {
