@@ -1,32 +1,23 @@
-fn hanoi(
-    out: &mut cp::tools::FastOutput<std::io::StdoutLock<'static>>,
-    count: u8,
-    src: u8,
-    dst: u8,
-) {
-    if count == 1 {
-        out.u8(src as u8);
-        out.byte(b' ');
-        out.u8(dst as u8);
-        out.byte(b'\n');
-    } else {
-        let md = 6 - src - dst;
-        hanoi(out, count - 1, src, md);
-        hanoi(out, 1, src, dst);
-        hanoi(out, count - 1, md, dst);
-    }
-}
-
 pub fn solve() {
     cp::prepare!();
 
-    let mut out = cp::tools::FastOutput::stdout();
     sc!(n: u8);
-    out.u64((1 << n as u64) - 1);
-    out.byte(b'\n');
-    hanoi(&mut out, n, 1, 3);
+    let len = (1 << n as usize) - 1;
+    pp!(len);
 
-    out.flush();
+    let mut v = Vec::with_capacity(len);
+    v.push((n, 1, 3));
+
+    while let Some((count, src, dst)) = v.pop() {
+        if count == 1 {
+            pp!(src, dst);
+        } else {
+            let md = 6 - src - dst;
+            v.push((count - 1, md, dst));
+            v.push((1, src, dst));
+            v.push((count - 1, src, md));
+        }
+    }
 }
 
-cp::main!(large_stack);
+cp::main!();

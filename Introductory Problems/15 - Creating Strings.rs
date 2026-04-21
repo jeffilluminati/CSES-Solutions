@@ -1,36 +1,56 @@
 pub fn solve() {
     cp::prepare!();
-    sc!(s: String);
+    sc!(s: Bytes);
 
-    let mut ans = Vec::<String>::new();
-    let mut cur = String::with_capacity(s.len());
-
+    let n = s.len() as u8;
     let mut freq = [0u8; 26];
-    s.bytes().for_each(|b| {
-        freq[(b - b'a') as usize] += 1;
-    });
+    s.into_iter().for_each(|b| freq[(b - b'a') as usize] += 1);
+    let unique = freq.iter().filter(|&&f| f != 0).count();
 
-    fn create(cur: &mut String, ans: &mut Vec<String>, freq: &mut [u8; 26], n: usize) {
+    let n = n as usize;
+    let mut cur = Vec::<u8>::with_capacity(n);
+    let mut next = Vec::<u8>::with_capacity(n + 1);
+    // The final vector is of max size (n+1)! / (n-unique)!
+    let ans_cap = ((n - unique + 1)..=(n + 1)).fold(1, |acc, x| acc * x);
+    let mut ans = Vec::<u8>::with_capacity(ans_cap);
+    let mut cnt = 0;
+
+    next.push(0);
+
+    while let Some(i) = next.last_mut() {
         if cur.len() == n {
-            ans.push(cur.clone());
-            return;
+            ans.extend(cur.iter());
+            ans.push(b'\n');
+            cnt += 1;
+
+            next.pop();
+            if let Some(j) = cur.pop() {
+                freq[(j - b'a') as usize] += 1;
+            }
+            continue;
         }
 
-        for i in 0..26 {
-            if freq[i] > 0 {
-                freq[i] -= 1;
-                cur.push((i as u8 + b'a') as char);
-                create(cur, ans, freq, n);
-                cur.pop();
-                freq[i] += 1;
+        while *i < 26 && freq[*i as usize] == 0 {
+            *i += 1;
+        }
+
+        if *i == 26 {
+            next.pop();
+            if let Some(j) = cur.pop() {
+                freq[(j - b'a') as usize] += 1;
             }
+        } else {
+            let j = *i;
+            *i += 1;
+            freq[j as usize] -= 1;
+            cur.push(j + b'a');
+            next.push(0);
         }
     }
 
-    create(&mut cur, &mut ans, &mut freq, s.len());
-
-    pp!(ans.len());
-    pp!(@lf @it ans.into_iter());
+    pp!(cnt);
+    pp!(@b ans);
+    // pp!(ans_cap.abs_diff(ans.len()), ans_cap >= ans.len());
 }
 
-cp::main!(large_stack);
+cp::main!();
