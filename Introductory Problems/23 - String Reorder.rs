@@ -1,12 +1,12 @@
 pub fn solve() {
     cp::prepare!();
-    sc!(s: String);
+    sc!(s: Bytes);
     let n = s.len();
 
     let mut freq = [0u32; 26];
-    s.bytes().for_each(|b| freq[(b - b'A') as usize] += 1);
+    s.iter().for_each(|&b| freq[(b - b'A') as usize] += 1);
 
-    let mut ans = String::with_capacity(n);
+    let mut ans = Vec::<u8>::with_capacity(n);
 
     let mut prev = 27;
     for _ in 0..n {
@@ -22,7 +22,7 @@ pub fn solve() {
                     total += freq[ch3];
                 }
                 if freq[ch2] <= (total + 1) / 2 && freq[ch] <= total / 2 {
-                    ans.push((ch as u8 + b'A') as char);
+                    ans.push(ch as u8 + b'A');
                     prev = ch;
                     solved = true;
                 } else {
@@ -39,7 +39,7 @@ pub fn solve() {
         }
     }
 
-    pp!(ans);
+    pp!(@b ans);
 }
 
 cp::main!();
