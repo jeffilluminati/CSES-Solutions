@@ -1,45 +1,42 @@
-const DX: [i16; 8] = [1, 2, 2, 1, -1, -2, -2, -1];
-const DY: [i16; 8] = [2, 1, -1, -2, -2, -1, 1, 2];
+const BASE_FIX: [[u16; 4]; 4] = [[0, 2, 0, 0], [2, 2, 0, 0], [0, 0, 2, 0], [0, 0, 0, 0]];
+const N4_FIX: [[u16; 4]; 4] = [[0, 0, 0, 2], [0, 0, 0, 0], [0, 0, 0, 0], [2, 0, 0, 0]];
 
 pub fn solve() {
     cp::prepare!();
-    let mut out = cp::tools::FastOutput::stdout();
-
-    use std::collections::VecDeque;
     sc!(n: u16);
 
-    let mut queue = VecDeque::<(i16, i16)>::new();
-    let mut grid = [[0i16; 1001]; 1001];
+    for i in 0..n {
+        let half_i = (i + 1) >> 1;
 
-    queue.push_back((0, 0));
-    grid[0][0] = 1;
-    while queue.len() > 0 {
-        let (x, y) = queue.pop_front().unwrap();
+        let mut third = (i + 2) / 3;
+        let mut rem3 = (i + 2) % 3;
 
-        (0..8).for_each(|i| {
-            let (vx, vy) = (x + DX[i], y + DY[i]);
+        for j in 0..n {
+            let half_j = (j + 1) >> 1;
+            let mut d = half_i.max(half_j).max(third);
+            d += (d + i + j) & 1;
 
-            if vx >= 0
-                && vy >= 0
-                && vy < n as i16
-                && vx < n as i16
-                && grid[vx as usize][vy as usize] == 0
-            {
-                grid[vx as usize][vy as usize] = grid[x as usize][y as usize] + 1;
-                queue.push_back((vx, vy));
+            if i < 4 && j < 4 {
+                d += BASE_FIX[i as usize][j as usize];
+                if n == 4 {
+                    d += N4_FIX[i as usize][j as usize];
+                }
             }
-        });
-    }
 
-    for i in 0..n as usize {
-        for j in 0..n as usize {
-            out.u16((grid[i][j] - 1) as u16);
-            out.byte(b' ');
+            if j + 1 != n {
+                pp!(d, ' ', !);
+            } else {
+                pp!(d);
+            }
+
+            if rem3 == 2 {
+                rem3 = 0;
+                third += 1;
+            } else {
+                rem3 += 1;
+            }
         }
-        out.byte(b'\n');
     }
-
-    out.flush();
 }
 
 cp::main!();
